@@ -134,7 +134,13 @@ function renderChart(){
   chart=new Chart(document.getElementById("ch"),{type:"line",data:{labels,datasets:ds},options:{
     responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
     plugins:{legend:{labels:{color:"#9e9e9e",boxWidth:10,font:{size:11}}},
-      tooltip:{callbacks:{label:c=>c.dataset.label+": "+eur(c.parsed.y)}}},
+      tooltip:{padding:12,titleFont:{size:13},bodyFont:{size:13},footerFont:{size:13,weight:"bold"},footerColor:"#9ccc65",
+        callbacks:{
+          title:i=>{const d=new Date(i[0].label);return d.getDate()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();},
+          label:c=>" "+c.dataset.label+": "+eur(c.parsed.y),
+          footer:i=>{const g=get(rows[i[0].dataIndex]);const base=g.paid+(g.dps||0);
+            return "Prinos: "+(g.ret>=0?"+":"")+eur(g.ret)+"  ("+pct(g.ret/base)+")";}
+        }}},
     scales:{
       x:{ticks:{color:"#9e9e9e",font:{size:10},maxRotation:0,autoSkip:false,
           callback:function(v,i){const d=new Date(this.getLabelForValue(v));const prev=i>0?new Date(this.getLabelForValue(v-1)):null;
